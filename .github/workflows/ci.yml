@@ -42,4 +42,4 @@ jobs:
 
       - name: Test ut_parse_simple
         run:
-          curl -k -u admin:password https://localhost:8089/services/search/jobs/export -d search="|makeresults n = 1 | eval cs_url = \"https://splunk.com\", list = \"*\" |  `ut_parse_simple(cs_url)`" -d output_mode=json | jq -e '(.result.ut_scheme | contains("https"))'
+          curl -k -u admin:password https://localhost:8089/services/search/jobs/export -d search="|makeresults n = 1 | eval cs_url = \"https://splunk.com\", list = \"*\" |  \`ut_parse_simple(cs_url)\`" -d output_mode=json | jq -e '(.result.ut_scheme | contains("https"))'
