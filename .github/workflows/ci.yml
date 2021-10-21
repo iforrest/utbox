@@ -3,7 +3,26 @@ name: CI
 on: push
 
 jobs:
+
+  appinspect-api:
+    name: AppInspect API Validation
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+     - run: |
+          find . -name '*.pyc' -delete
+          tar --exclude="utbox/local" --exclude="utbox/metadata/local.meta" -zcvf utbox.tgz utbox
+     - uses: splunk/appinspect-api-action@v2
+       with:
+        filePath: utbox.tgz
+        splunkUser: ${{ secrets.SPLUNK_USER }}
+        splunkPassword: ${{ secrets.SPLUNK_PASS }}
+        includedTags: cloud
+        failOnError: true
+        failOnWarning: false
+
   splunk-test:
+    needs: appinspect-api
     runs-on: ubuntu-latest
     strategy:
       matrix:
