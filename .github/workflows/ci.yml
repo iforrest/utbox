@@ -7,7 +7,6 @@ jobs:
   appinspect-api:
     name: AppInspect API Validation
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
     steps:
      - run: |
           find . -name '*.pyc' -delete
