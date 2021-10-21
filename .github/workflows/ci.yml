@@ -8,17 +8,19 @@ jobs:
     name: AppInspect API Validation
     runs-on: ubuntu-latest
     steps:
-     - run: |
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: |
           find . -name '*.pyc' -delete
           tar --exclude="utbox/local" --exclude="utbox/metadata/local.meta" -zcvf utbox.tgz utbox
-     - uses: splunk/appinspect-api-action@v2
-       with:
-        filePath: utbox.tgz
-        splunkUser: ${{ secrets.SPLUNK_USER }}
-        splunkPassword: ${{ secrets.SPLUNK_PASS }}
-        includedTags: cloud
-        failOnError: true
-        failOnWarning: false
+      - uses: splunk/appinspect-api-action@v2
+        with:
+          filePath: utbox.tgz
+          splunkUser: ${{ secrets.SPLUNK_USER }}
+          splunkPassword: ${{ secrets.SPLUNK_PASS }}
+          includedTags: cloud
+          failOnError: true
+          failOnWarning: false
 
   splunk-test:
     needs: appinspect-api
