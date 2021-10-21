@@ -1,0 +1,41 @@
+name: CI
+
+on: push
+
+jobs:
+  splunk-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ["7.3.9","7.2.10.1","8.2"]
+    services:
+      splunk:
+        image: splunk/splunk:${{ matrix.version }}
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_PASSWORD: password
+        options: >-
+          --health-interval 30s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 8000:8000
+          - 8089:8089
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy app to service container
+        run: docker cp utbox ${{ job.services.splunk.id }}:/opt/splunk/etc/apps/utbox
+
+      - run: docker exec -i ${{ job.services.splunk.id }} ls -a /opt/splunk/etc/apps/utbox
+      - run: docker exec -i ${{ job.services.splunk.id }} ls -a /opt/splunk/etc/apps
+
+      - name: Restart instance
+        run: |
+          curl -k -u admin:password https://localhost:8089/services/server/control/restart -X POST
+          sleep 30
+      - name: Print App Configuration
+        run: |
+          curl -k -u admin:password https://localhost:8089/services/apps/local/utbox
