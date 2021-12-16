@@ -101,18 +101,26 @@ Please find below some selected samples of commands and their respective output.
 | `ut_countset(url,set)`
 ```
 
-
 **Output**
 |_time                       |set               |url |ut_countset                                  |
 |----------------------------|------------------|----|---------------------------------------------|
 |2021-12-16T10:34:17.000+0000|tu                |buttercup|{"ut_countset": {"sum": 4, "74": 2, "75": 2}}|
 
 
-
-
 ## Development
 
-Coming soon!
+### Development Setup
+
+1. Clone this repository
+2. Symlink the `utbox` directory to your `$SPLUNK_HOME/etc/apps/` directory.
+
+### Creating a release bundle
+
+Run the `package` target in the provided Makefile.
+```
+make package
+```
+
 
 ## License
 
