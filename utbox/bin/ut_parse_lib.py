@@ -45,6 +45,8 @@ def _loadIANAList(filename="suffix_list_iana.dat"):
         line = line.strip().lower()
         TLD['regulars'].append(line)  # com
         line = f.readline()
+    
+    f.close()
 
     return TLD
 
@@ -81,7 +83,7 @@ def _loadMozillaList():
         ret = re.search('^\s*([^\s]+)', line)
         if ret:
             tld_raw = ret.group(1)
-            tld_pun = tld_raw.encode('idna')
+            #tld_pun = tld_raw.encode('idna')
 
             c = tld_raw[0]
             if c == '*':
@@ -89,8 +91,10 @@ def _loadMozillaList():
             elif c == '!':
                 TLD['exceptions'].append(tld_raw[1:])  # !www.ck => www.ck
             else:
-                TLD['regulars'].append(tld_pun)  # ro.com
+                TLD['regulars'].append(tld_raw)  # ro.com
         line = f.readline()
+
+    f.close()
 
     return TLD
 
