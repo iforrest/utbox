@@ -1,8 +1,6 @@
-import os
-import re
 import sys
 import csv
-import codecs
+import logging
 
 import ut_log
 import ut_parse_lib
@@ -10,7 +8,11 @@ import ut_parse_lib
 ########
 # MAIN #
 ########
-logger = ut_log.setup_logger()
+try:
+    logger = ut_log.setup_logger()
+except:
+    logger = logging.getLogger(__name__)
+    logger.warning("Failed to instantiate logger, falling back to default logger")
 
 header = [
     'url',
@@ -38,7 +40,11 @@ csv_out.writerow(dict(zip(header, header)))  # write header
 TLDList = None
 
 for row in csv_in:
-    url = row['url'].strip()
+    try:
+        url = row['url'].strip()
+    except Exception as e:
+        logger.error("Did not find url field in row, continuing with next row")
+        continue
 
     if TLDList == None:
         try:
