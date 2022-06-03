@@ -1,5 +1,6 @@
 import sys
 import csv
+import logging
 
 import ut_log
 import ut_parse_lib
@@ -7,7 +8,11 @@ import ut_parse_lib
 ########
 # MAIN #
 ########
-logger = ut_log.setup_logger()
+try:
+    logger = ut_log.setup_logger()
+except:
+    logger = logging.getLogger(__name__)
+    logger.warning("Failed to instantiate logger, falling back to default logger")
 
 header = [
     'url',
